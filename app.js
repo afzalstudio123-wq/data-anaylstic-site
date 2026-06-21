@@ -390,7 +390,7 @@ function renderSQLOutput(result, container) {
   }
 
   let tableHtml = `
-    <div class="overflow-x-auto sql-table-container">
+    <div class="overflow-x-auto w-full sql-table-container">
       <table class="min-w-full divide-y divide-gray-800 text-left">
         <thead class="bg-gray-900/60">
           <tr>

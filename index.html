@@ -481,11 +481,11 @@
             <!-- Preset Select -->
             <div class="flex items-center gap-2">
               <label for="sql-preset-select" class="text-xs text-gray-400 font-semibold">Presets:</label>
-              <select id="sql-preset-select" class="bg-gray-900 border border-gray-800 rounded px-2.5 py-1 text-xs text-gray-300 focus:outline-none focus:border-cyanaccent">
-                <option value="preset4">SELECT * FROM sales</option>
-                <option value="preset1">SELECT sales_id, product, category, revenue FROM sales WHERE category = 'Electronics'</option>
-                <option value="preset2">SELECT name, city, total_spent FROM customers WHERE total_spent > 1000 ORDER BY total_spent DESC</option>
-                <option value="preset3">SELECT name, cuisine, rating, avg_cost_for_two FROM restaurants WHERE rating >= 4.6</option>
+              <select id="sql-preset-select" class="w-[180px] sm:w-[260px] truncate bg-gray-900 border border-gray-800 rounded px-2.5 py-1 text-xs text-gray-300 focus:outline-none focus:border-cyanaccent">
+                <option value="preset4">All Sales Transactions</option>
+                <option value="preset1">Electronics Sales Margin</option>
+                <option value="preset2">Top Customers Spend</option>
+                <option value="preset3">Top Rated Restaurants</option>
               </select>
             </div>
             
@@ -604,8 +604,8 @@
       </div>
 
       <!-- Dataset Grid/Table -->
-      <div class="glass-panel rounded-2xl border border-white/5 overflow-hidden">
-        <div class="overflow-x-auto">
+      <div class="glass-panel rounded-2xl border border-white/5 overflow-hidden w-full">
+        <div class="overflow-x-auto w-full">
           <table class="min-w-full divide-y divide-gray-800 text-left text-sm">
             <thead class="bg-gray-900/60 font-display">
               <tr>
