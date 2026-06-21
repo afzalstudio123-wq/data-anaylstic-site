@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DataLabs Pro - Premium Data Analytics Learning Hub & Portfolio Project Platform by Afzal Ehsan. Master SQL, Data Dashboards, and Corporate-level Virtual Internships.">
+  <title>DataLabs Pro | Data Analytics Learning Hub & Portfolio Hub</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            darkbg: '#0B0F19',
+            cardbg: 'rgba(17, 24, 39, 0.65)',
+            cyanaccent: '#06B6D4',
+            indigoaccent: '#6366F1',
+            emeraldaccent: '#10B981',
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-darkbg text-gray-100 min-h-screen relative selection:bg-cyanaccent/30 selection:text-cyan-200">
+
+  <!-- Background Ambient Glow Blobs -->
+  <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
+    <div class="absolute top-0 left-0 w-[40vw] h-[40vh] bg-radial-cyan animate-pulse-glow"></div>
+    <div class="absolute bottom-0 right-0 w-[45vw] h-[45vh] bg-radial-indigo animate-pulse-glow" style="animation-delay: -2s;"></div>
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <header class="sticky top-0 z-40 glass-navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyanaccent to-indigoaccent flex items-center justify-center shadow-lg shadow-cyanaccent/20 group-hover:scale-105 transition-transform duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+            </svg>
+          </div>
+          <span class="font-display font-bold text-xl sm:text-2xl tracking-wide bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent group-hover:text-cyanaccent transition-colors">
+            DataLabs<span class="text-cyanaccent">Pro</span>
+          </span>
+        </a>
+
+        <!-- Desktop Navigation links -->
+        <nav class="hidden lg:flex items-center gap-8 text-sm font-medium">
+          <a href="#about" class="text-gray-300 hover:text-cyanaccent transition-colors duration-200">About</a>
+          <a href="#resource-hub" class="text-gray-300 hover:text-cyanaccent transition-colors duration-200">Practice Hub</a>
+          <a href="#live-dashboard" class="text-gray-300 hover:text-cyanaccent transition-colors duration-200">Live Analytics</a>
+          <a href="#sql-playground" class="text-gray-300 hover:text-cyanaccent transition-colors duration-200">SQL Sandbox</a>
+          <a href="#datasets" class="text-gray-300 hover:text-cyanaccent transition-colors duration-200">Datasets</a>
+          <a href="#submission" class="text-gray-300 hover:text-cyanaccent transition-colors duration-200">Submit Project</a>
+        </nav>
+
+        <!-- Actions / Mobile triggers -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <div id="header-actions" class="flex items-center">
+            <a href="#" id="student-login-btn" class="glass-panel px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg text-cyanaccent border border-cyanaccent/20 hover:border-cyanaccent/80 hover:bg-cyanaccent/5 transition-all duration-300 shadow-md">
+              Student Login
+            </a>
+          </div>
+
+          <!-- Mobile Hamburger Trigger -->
+          <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 focus:outline-none transition-colors" aria-label="Toggle Menu">
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path id="hamburger-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-gray-800 bg-darkbg/95 px-4 py-3 space-y-1 shadow-2xl transition-all duration-300">
+      <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-cyanaccent hover:bg-white/5 transition-all">About Project</a>
+      <a href="#resource-hub" class="mobile-nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-cyanaccent hover:bg-white/5 transition-all">Practice Hub</a>
+      <a href="#live-dashboard" class="mobile-nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-cyanaccent hover:bg-white/5 transition-all">Live Analytics</a>
+      <a href="#sql-playground" class="mobile-nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-cyanaccent hover:bg-white/5 transition-all">SQL Sandbox</a>
+      <a href="#datasets" class="mobile-nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-cyanaccent hover:bg-white/5 transition-all">Datasets</a>
+      <a href="#submission" class="mobile-nav-link block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-cyanaccent hover:bg-white/5 transition-all">Submit Project</a>
+    </div>
+  </header>
+
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-20">
+
+    <!-- HERO SECTION -->
+    <section id="about" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-6">
+      <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
+        <div class="flex justify-center lg:justify-start">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyanaccent/10 border border-cyanaccent/20 text-cyanaccent text-xs font-semibold uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-cyanaccent animate-pulse"></span>
+            Interactive Portfolio & Learning Workspace
+          </div>
+        </div>
+        <h1 class="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-tight">
+          Master Data Analytics With <span class="bg-gradient-to-r from-cyanaccent via-indigoaccent to-purple-400 bg-clip-text text-transparent text-glow-cyan">Real-World Projects</span>
+        </h1>
+        <p class="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
+          An immersive playground designed by <strong class="text-white">Afzal Ehsan</strong> to bridge the gap between academic theory and corporate data consulting. Explore curated toolsets, run live sandbox queries, visualize real-time charts, and kickstart virtual internships.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-2 max-w-md mx-auto lg:mx-0">
+          <a href="#resource-hub" class="w-full sm:w-auto text-center px-6 py-3 rounded-lg font-semibold text-sm bg-gradient-to-r from-cyanaccent to-indigoaccent hover:from-cyanaccent/90 hover:to-indigoaccent/90 shadow-lg shadow-indigoaccent/20 hover:scale-[1.02] transform transition-all duration-300 text-white">
+            Explore Projects
+          </a>
+          <a href="#sql-playground" class="w-full sm:w-auto text-center glass-panel px-6 py-3 rounded-lg font-semibold text-sm text-gray-300 hover:text-white border border-gray-700 hover:border-cyanaccent/40 transition-all duration-300">
+            Start SQL Practice
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Board / Interactive Hero Card -->
+      <div class="lg:col-span-5 relative mt-6 lg:mt-0">
+        <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-cyanaccent to-indigoaccent opacity-30 blur-xl"></div>
+        <div class="relative glass-panel rounded-2xl p-5 sm:p-8 space-y-6">
+          <div class="flex items-center justify-between border-b border-gray-800 pb-4">
+            <div>
+              <p class="text-xs text-gray-500 font-semibold uppercase">Portfolio Pitch</p>
+              <h3 class="font-display font-bold text-base sm:text-lg text-white">Afzal Ehsan's Showcase</h3>
+            </div>
+            <span class="px-2.5 py-1 rounded bg-indigoaccent/10 border border-indigoaccent/20 text-indigoaccent text-xs font-bold shrink-0">PROTOTYPE</span>
+          </div>
+
+          <!-- Hero Metrics Grid -->
+          <div class="grid grid-cols-2 gap-3 sm:gap-4">
+            <div class="glass-panel rounded-xl p-3.5 sm:p-4 text-center">
+              <div class="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-cyanaccent text-glow-cyan">1,200+</div>
+              <div class="text-[10px] sm:text-xs text-gray-400 mt-1">Students Enrolled</div>
+            </div>
+            <div class="glass-panel rounded-xl p-3.5 sm:p-4 text-center">
+              <div class="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-emeraldaccent">4.9/5</div>
+              <div class="text-[10px] sm:text-xs text-gray-400 mt-1">Course Rating</div>
+            </div>
+            <div class="glass-panel rounded-xl p-3.5 sm:p-4 text-center">
+              <div class="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-white">45+</div>
+              <div class="text-[10px] sm:text-xs text-gray-400 mt-1">Submissions Reviewed</div>
+            </div>
+            <div class="glass-panel rounded-xl p-3.5 sm:p-4 text-center">
+              <div class="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-indigoaccent">12+</div>
+              <div class="text-[10px] sm:text-xs text-gray-400 mt-1">Corporate Partners</div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2.5 text-xs text-gray-400 bg-white/5 py-2.5 px-3 rounded-lg text-left">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-cyanaccent shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+            <span>Fully Client-side, Vercel-Ready Sandbox Environment</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOCK STUDENT DASHBOARD PANEL (Toggled visible upon Auth Login) -->
+    <section id="student-dashboard-panel" class="hidden relative">
+      <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-500 opacity-20 blur-lg"></div>
+      <div class="relative glass-panel rounded-2xl p-6 sm:p-8 space-y-6 border border-emerald-500/20">
+        <!-- Dashboard Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800 pb-5">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center border border-emerald-500/50">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div>
+              <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">WORKSPACE LOADED</span>
+              <h2 class="font-display font-bold text-2xl text-white">Student Personal Dashboard</h2>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs bg-white/5 py-1 px-3 rounded-full text-gray-400 border border-gray-800">Status: Active</span>
+            <span class="text-xs bg-cyanaccent/10 border border-cyanaccent/20 text-cyanaccent py-1 px-3 rounded-full font-bold">SQL Level: Intermediate</span>
+          </div>
+        </div>
+
+        <!-- Dashboard Body Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Col 1: Progress Tracker -->
+          <div class="glass-panel rounded-xl p-5 space-y-4">
+            <div class="flex justify-between items-center text-sm font-semibold">
+              <span class="text-gray-300">Practice Path Progress</span>
+              <span class="text-cyanaccent" id="student-progress-text">0%</span>
+            </div>
+            <div class="w-full bg-gray-900 rounded-full h-3 overflow-hidden border border-gray-800">
+              <div id="student-progress-bar" class="bg-gradient-to-r from-cyanaccent to-indigoaccent h-full transition-all duration-1000 ease-out" style="width: 0%;"></div>
+            </div>
+            <ul class="text-xs text-gray-400 space-y-2 pt-2">
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emeraldaccent"></span> SQL Top 50 Challenges: 37/50 Done</li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emeraldaccent"></span> Maven Dashboard Practice: Completed</li>
+              <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> Virtual Internships: In Progress</li>
+            </ul>
+          </div>
+
+          <!-- Col 2: Submitted Projects Tracker -->
+          <div class="glass-panel rounded-xl p-5 flex flex-col justify-between">
+            <div class="space-y-2">
+              <h4 class="font-display font-bold text-sm text-gray-300">Project Review Submissions</h4>
+              <p class="text-xs text-gray-400">Manage, update, or view feedback on your analytical code repositories.</p>
+            </div>
+            <div class="flex items-center gap-4 bg-white/5 p-3 rounded-lg my-3">
+              <div class="text-3xl font-display font-extrabold text-white" id="student-sub-count">2</div>
+              <div class="text-xs text-gray-400">Projects Submitted for Review (1 Approved, 1 In Queue)</div>
+            </div>
+            <a href="#submission" class="text-xs text-cyanaccent hover:underline flex items-center gap-1 font-semibold">Submit a new repository &rarr;</a>
+          </div>
+
+          <!-- Col 3: Active Virtual Internship -->
+          <div class="glass-panel rounded-xl p-5 flex flex-col justify-between">
+            <div class="space-y-2">
+              <span class="text-[10px] text-indigoaccent font-bold uppercase">ENROLLED PROGRAM</span>
+              <h4 class="font-display font-bold text-base text-white">KPMG Data Analytics Program</h4>
+              <p class="text-xs text-gray-400">Module 3: Customer Segmentation using RFM (Recency, Frequency, Monetary) Clustering.</p>
+            </div>
+            <div class="pt-4 flex items-center justify-between border-t border-gray-800">
+              <span class="text-xs text-gray-500">Resource: Forage Sandbox</span>
+              <a href="https://www.theforage.com/" target="_blank" class="px-3 py-1.5 rounded bg-indigoaccent hover:bg-indigoaccent/90 text-xs font-semibold transition-colors text-white">Resume Task</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE RESOURCE HUB (Filterable Tabs) -->
+    <section id="resource-hub" class="space-y-8">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">Interactive Resource Hub</h2>
+        <p class="text-gray-400 text-sm sm:text-base">
+          Filter through curated tools, challenges, and templates. Click any card to launch external practices, templates, or sandbox workspaces.
+        </p>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex justify-center flex-wrap gap-2 sm:gap-3">
+        <button data-filter="all" class="filter-tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 bg-gradient-to-r from-cyanaccent to-indigoaccent text-white shadow-lg shadow-indigoaccent/20">
+          All Resouces
+        </button>
+        <button data-filter="sql" class="filter-tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-300">
+          SQL Practice
+        </button>
+        <button data-filter="dashboard" class="filter-tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-300">
+          Data Dashboards
+        </button>
+        <button data-filter="internship" class="filter-tab-btn px-5 py-2.5 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-300">
+          Virtual Internships
+        </button>
+      </div>
+
+      <!-- Resource Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        
+        <!-- SQL Card 1 -->
+        <div class="resource-card glass-panel glass-panel-hover rounded-xl p-6 transition-all duration-300 space-y-4" data-category="sql">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-md bg-cyanaccent/15 border border-cyanaccent/30 text-xs font-semibold text-cyanaccent">SQL Practice</span>
+            <div class="text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white">LeetCode Top 50 SQL</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            The benchmark collection of relational database questions. Master JOINS, Aggregations, Window Functions, and Common Table Expressions (CTEs).
+          </p>
+          <div class="pt-4 border-t border-gray-800 flex items-center justify-between text-xs">
+            <span class="text-gray-500">Format: Online Challenges</span>
+            <a href="https://leetcode.com/studyplan/top-sql-50/" target="_blank" class="text-cyanaccent hover:underline flex items-center gap-1 font-semibold">
+              Practice Now 
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- SQL Card 2 -->
+        <div class="resource-card glass-panel glass-panel-hover rounded-xl p-6 transition-all duration-300 space-y-4" data-category="sql">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-md bg-cyanaccent/15 border border-cyanaccent/30 text-xs font-semibold text-cyanaccent">SQL Practice</span>
+            <div class="text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7m-16 0c0-2 1.5-3 3.5-3h9c2 0 3.5 1 3.5 3" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white">SQLZoo Tutorials</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Excellent interactive tutorials starting from SELECT basics up to advanced nested SELECT queries and CASE expression mapping.
+          </p>
+          <div class="pt-4 border-t border-gray-800 flex items-center justify-between text-xs">
+            <span class="text-gray-500">Format: Sandbox Coding</span>
+            <a href="https://sqlzoo.net/wiki/SQL_Tutorial" target="_blank" class="text-cyanaccent hover:underline flex items-center gap-1 font-semibold">
+              Practice Now
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Dashboard Card 1 -->
+        <div class="resource-card glass-panel glass-panel-hover-indigo rounded-xl p-6 transition-all duration-300 space-y-4" data-category="dashboard">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-md bg-indigoaccent/15 border border-indigoaccent/30 text-xs font-semibold text-indigoaccent">Data Dashboards</span>
+            <div class="text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white">Maven Analytics Playground</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Test your BI skills with industry-standard datasets. Create dynamic, visual dashboard projects in Tableau, Power BI, or Excel.
+          </p>
+          <div class="pt-4 border-t border-gray-800 flex items-center justify-between text-xs">
+            <span class="text-gray-500">Format: Visualization Challenges</span>
+            <a href="https://mavenanalytics.io/data-playground" target="_blank" class="text-cyanaccent hover:underline flex items-center gap-1 font-semibold">
+              Explore Datasets
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Dashboard Card 2 -->
+        <div class="resource-card glass-panel glass-panel-hover-indigo rounded-xl p-6 transition-all duration-300 space-y-4" data-category="dashboard">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-md bg-indigoaccent/15 border border-indigoaccent/30 text-xs font-semibold text-indigoaccent">Data Dashboards</span>
+            <div class="text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white">Kaggle Datasets & Notebooks</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Discover thousands of open-source datasets. Analyze user behavior, compile trends, and publish notebooks using Python and R.
+          </p>
+          <div class="pt-4 border-t border-gray-800 flex items-center justify-between text-xs">
+            <span class="text-gray-500">Format: Data Repositories</span>
+            <a href="https://www.kaggle.com/datasets" target="_blank" class="text-cyanaccent hover:underline flex items-center gap-1 font-semibold">
+              Browse Notebooks
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Internship Card 1 -->
+        <div class="resource-card glass-panel glass-panel-hover rounded-xl p-6 transition-all duration-300 space-y-4" data-category="internship">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-md bg-emeraldaccent/15 border border-emeraldaccent/30 text-xs font-semibold text-emeraldaccent">Virtual Internships</span>
+            <div class="text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white">KPMG Analytics (Forage)</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Deliver corporate insights on customer datasets. Focuses on data quality evaluation, RFM analysis, and dashboard communication.
+          </p>
+          <div class="pt-4 border-t border-gray-800 flex items-center justify-between text-xs">
+            <span class="text-gray-500">Partner: KPMG Consulting</span>
+            <a href="https://www.theforage.com/virtual-internships/prototype/m7W4GMqeTCkHO8T97/KPMG-Data-Analytics-Virtual-Internship" target="_blank" class="text-cyanaccent hover:underline flex items-center gap-1 font-semibold">
+              Enroll Free
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Internship Card 2 -->
+        <div class="resource-card glass-panel glass-panel-hover rounded-xl p-6 transition-all duration-300 space-y-4" data-category="internship">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-md bg-emeraldaccent/15 border border-emeraldaccent/30 text-xs font-semibold text-emeraldaccent">Virtual Internships</span>
+            <div class="text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white">Accenture Data (Forage)</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Gain exposure to content-driven analytics. Advise corporate clients on content category engagement, data cleaning, and data stories.
+          </p>
+          <div class="pt-4 border-t border-gray-800 flex items-center justify-between text-xs">
+            <span class="text-gray-500">Partner: Accenture Tech</span>
+            <a href="https://www.theforage.com/virtual-internships/prototype/yGvzgj7alKAZqH9Co/Accenture-North-America-Data-Analytics-Virtual-Experience" target="_blank" class="text-cyanaccent hover:underline flex items-center gap-1 font-semibold">
+              Enroll Free
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LIVE DATA VISUALIZATION SECTION (CHART.JS) -->
+    <section id="live-dashboard" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs text-cyanaccent font-semibold uppercase tracking-wider">Live Visualization Dashboard</span>
+          <h2 class="font-display font-bold text-3xl text-white">Visual Analytics Playground</h2>
+          <p class="text-gray-400 text-sm mt-1">Select a sample schema dataset to dynamically re-compile and display charts.</p>
+        </div>
+        <!-- Dataset selector tabs -->
+        <div class="flex gap-2">
+          <button data-dataset="ecommerce" class="dataset-btn px-4 py-2 rounded-lg text-xs font-semibold border border-cyanaccent/50 bg-cyan-500/20 text-cyanaccent transition-all">
+            E-Commerce Sales
+          </button>
+          <button data-dataset="zomato" class="dataset-btn px-4 py-2 rounded-lg text-xs font-semibold border border-transparent bg-white/5 text-gray-400 hover:text-white transition-all">
+            Zomato Analysis
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Visual Layout Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Chart Canvas Card -->
+        <div class="lg:col-span-8 glass-panel rounded-2xl p-6 border border-white/5 relative min-h-[350px] sm:min-h-[400px] flex flex-col justify-between">
+          <div class="absolute top-4 right-4 flex items-center gap-2 text-xs text-gray-500 font-semibold">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyanaccent animate-ping"></span> Live Canvas
+          </div>
+          <div class="w-full flex-1 mt-4">
+            <canvas id="analyticsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Metrics Cards Column -->
+        <div class="lg:col-span-4 flex flex-col gap-6 justify-between">
+          <!-- Metric Card 1 -->
+          <div class="glass-panel rounded-2xl p-6 border border-white/5 flex flex-col justify-between flex-1 relative overflow-hidden group">
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-cyanaccent/5 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div>
+              <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider" id="metric-label-1">Total Revenue</p>
+              <h3 class="text-4xl font-display font-black text-white mt-2 tracking-tight" id="metric-val-1">$123,000</h3>
+            </div>
+            <div class="text-xs text-gray-400 mt-4" id="metric-trend-1">
+              <span class="text-emerald-400">↑ 18.2%</span> vs last month
+            </div>
+          </div>
+
+          <!-- Metric Card 2 -->
+          <div class="glass-panel rounded-2xl p-6 border border-white/5 flex flex-col justify-between flex-1 relative overflow-hidden group">
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigoaccent/5 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div>
+              <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider" id="metric-label-2">Avg. Order Value</p>
+              <h3 class="text-4xl font-display font-black text-white mt-2 tracking-tight" id="metric-val-2">$84.50</h3>
+            </div>
+            <div class="text-xs text-gray-400 mt-4" id="metric-trend-2">
+              <span class="text-emerald-400">↑ 4.3%</span> vs last month
+            </div>
+          </div>
+
+          <!-- Sandbox Instruction banner -->
+          <div class="glass-panel rounded-2xl p-5 border border-white/5 bg-gradient-to-br from-indigoaccent/10 to-transparent">
+            <h4 class="font-display font-bold text-sm text-white mb-1">Sandbox Connected</h4>
+            <p class="text-xs text-gray-400 leading-relaxed">
+              Charts are hooked directly into a Client-Side Javascript memory buffer. Changing dataset tabs or querying variables in the SQL playground will refresh dashboard components.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE SQL PLAYGROUND (MOCK QUERY RUNNER) -->
+    <section id="sql-playground" class="space-y-6">
+      <div>
+        <span class="text-xs text-cyanaccent font-semibold uppercase tracking-wider">Interactive SQL Compiler</span>
+        <h2 class="font-display font-bold text-3xl text-white">Live SQL Sandbox</h2>
+        <p class="text-gray-400 text-sm mt-1">Write standard ANSI SQL queries against our local tables and see immediate outputs.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Query Input & Terminal -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gray-950/60 p-3 rounded-t-xl border-t border-x border-gray-800">
+            <!-- Preset Select -->
+            <div class="flex items-center gap-2">
+              <label for="sql-preset-select" class="text-xs text-gray-400 font-semibold">Presets:</label>
+              <select id="sql-preset-select" class="bg-gray-900 border border-gray-800 rounded px-2.5 py-1 text-xs text-gray-300 focus:outline-none focus:border-cyanaccent">
+                <option value="preset4">SELECT * FROM sales</option>
+                <option value="preset1">SELECT sales_id, product, category, revenue FROM sales WHERE category = 'Electronics'</option>
+                <option value="preset2">SELECT name, city, total_spent FROM customers WHERE total_spent > 1000 ORDER BY total_spent DESC</option>
+                <option value="preset3">SELECT name, cuisine, rating, avg_cost_for_two FROM restaurants WHERE rating >= 4.6</option>
+              </select>
+            </div>
+            
+            <!-- Indicator light -->
+            <div class="flex items-center gap-2 text-[10px] text-gray-500 font-mono">
+              <span class="w-2 h-2 rounded-full bg-emeraldaccent animate-pulse"></span> DB: sandbox.db (Read-Only)
+            </div>
+          </div>
+
+          <!-- Code input area -->
+          <div id="sql-editor-container" class="border border-gray-800 rounded-b-xl bg-gray-950/40 p-4 transition-all duration-300 relative">
+            <textarea id="sql-editor" rows="6" class="w-full bg-transparent font-mono text-sm text-cyanaccent focus:outline-none resize-none leading-relaxed tracking-wide" placeholder="SELECT * FROM sales;"></textarea>
+            
+            <div class="absolute bottom-3 right-3">
+              <button id="sql-run-btn" class="px-4 py-2 rounded bg-gradient-to-r from-cyanaccent to-indigoaccent hover:opacity-90 shadow-md shadow-cyanaccent/15 transition-all text-xs font-bold text-white flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                </svg> Run Query
+              </button>
+            </div>
+          </div>
+
+          <!-- Query Outputs Box -->
+          <div class="glass-panel rounded-xl border border-white/5 p-4 min-h-[160px] flex flex-col justify-between">
+            <span class="text-xs text-gray-500 font-semibold uppercase tracking-wider block border-b border-gray-850 pb-2 mb-3">Output Terminal</span>
+            <div id="sql-output-area" class="flex-1 text-xs">
+              <div class="py-6 text-center text-gray-500">
+                <p>Click <strong class="text-cyanaccent">Run Query</strong> above to compile syntax and retrieve tabular rows.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schema Explorer Panel -->
+        <div class="lg:col-span-5 glass-panel rounded-2xl p-6 border border-white/5 space-y-6">
+          <div>
+            <h3 class="font-display font-bold text-lg text-white">Schema Explorer</h3>
+            <p class="text-xs text-gray-400 mt-0.5">Explore queryable database structures and columns.</p>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Table 1: sales -->
+            <div class="border border-gray-800 rounded-lg p-3.5 bg-gray-900/20">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-mono text-sm text-cyanaccent font-semibold flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  sales
+                </span>
+                <span class="text-[10px] text-gray-500 font-semibold uppercase">Table</span>
+              </div>
+              <p class="text-xs text-gray-400 mb-2">E-commerce order transactions dataset.</p>
+              <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">sale_id (INT)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">product (VARCHAR)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">category (VARCHAR)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">revenue (INT)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">units_sold (INT)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">order_date (DATE)</span>
+              </div>
+            </div>
+
+            <!-- Table 2: customers -->
+            <div class="border border-gray-800 rounded-lg p-3.5 bg-gray-900/20">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-mono text-sm text-indigoaccent font-semibold flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  customers
+                </span>
+                <span class="text-[10px] text-gray-500 font-semibold uppercase">Table</span>
+              </div>
+              <p class="text-xs text-gray-400 mb-2">Registered buyer and customer profiles.</p>
+              <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">customer_id (INT)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">name (VARCHAR)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">city (VARCHAR)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">sign_up_date (DATE)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">total_spent (INT)</span>
+              </div>
+            </div>
+
+            <!-- Table 3: restaurants -->
+            <div class="border border-gray-800 rounded-lg p-3.5 bg-gray-900/20">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-mono text-sm text-emeraldaccent font-semibold flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-11.314l.707.707m11.314 11.314l.707-.707" /></svg>
+                  restaurants
+                </span>
+                <span class="text-[10px] text-gray-500 font-semibold uppercase">Table</span>
+              </div>
+              <p class="text-xs text-gray-400 mb-2">Food delivery platform partners.</p>
+              <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">restaurant_id (INT)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">name (VARCHAR)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">cuisine (VARCHAR)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">rating (DECIMAL)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">avg_cost_for_two (INT)</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-gray-300">delivery_time_mins (INT)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATASET REPOSITORY SECTION -->
+    <section id="datasets" class="space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs text-cyanaccent font-semibold uppercase tracking-wider">Mock Downloads</span>
+          <h2 class="font-display font-bold text-3xl text-white">Dataset Repository</h2>
+          <p class="text-gray-400 text-sm mt-1">Download clean CSV files to practice visualizations in Tableau, Power BI, or local Python notebooks.</p>
+        </div>
+        <div class="text-xs text-gray-500">
+          *CSV streams are generated locally via Blob API.
+        </div>
+      </div>
+
+      <!-- Dataset Grid/Table -->
+      <div class="glass-panel rounded-2xl border border-white/5 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-800 text-left text-sm">
+            <thead class="bg-gray-900/60 font-display">
+              <tr>
+                <th class="px-6 py-4 text-gray-400 font-semibold">Dataset Name</th>
+                <th class="px-6 py-4 text-gray-400 font-semibold">Format</th>
+                <th class="px-6 py-4 text-gray-400 font-semibold">Size</th>
+                <th class="px-6 py-4 text-gray-400 font-semibold">Row Count</th>
+                <th class="px-6 py-4 text-gray-400 font-semibold">Target Use Case</th>
+                <th class="px-6 py-4 text-gray-400 font-semibold text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800/40 text-gray-300 font-medium">
+              <!-- Dataset Row 1 -->
+              <tr>
+                <td class="px-6 py-4 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded bg-cyanaccent/15 flex items-center justify-center text-cyanaccent font-bold text-xs">CSV</div>
+                  <div>
+                    <span class="font-semibold text-white block">E-commerce Sales.csv</span>
+                    <span class="text-[10px] text-gray-500">Schema: sales</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-xs text-gray-400">CSV Text</td>
+                <td class="px-6 py-4 text-xs text-gray-400">1.4 KB</td>
+                <td class="px-6 py-4 text-xs text-gray-400">7 Rows</td>
+                <td class="px-6 py-4 text-xs text-gray-400">Sales Trends & Product Margins</td>
+                <td class="px-6 py-4 text-right">
+                  <button onclick="triggerDatasetDownload('E-commerce Sales.csv')" class="px-3.5 py-1.5 rounded bg-white/5 hover:bg-cyanaccent/20 hover:text-cyanaccent border border-transparent hover:border-cyanaccent/30 text-xs transition-all font-semibold">
+                    Download
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Dataset Row 2 -->
+              <tr>
+                <td class="px-6 py-4 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded bg-cyanaccent/15 flex items-center justify-center text-cyanaccent font-bold text-xs">CSV</div>
+                  <div>
+                    <span class="font-semibold text-white block">Zomato Analysis.csv</span>
+                    <span class="text-[10px] text-gray-500">Schema: restaurants</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-xs text-gray-400">CSV Text</td>
+                <td class="px-6 py-4 text-xs text-gray-400">0.8 KB</td>
+                <td class="px-6 py-4 text-xs text-gray-400">5 Rows</td>
+                <td class="px-6 py-4 text-xs text-gray-400">Food Rating & Delivery Times</td>
+                <td class="px-6 py-4 text-right">
+                  <button onclick="triggerDatasetDownload('Zomato Analysis.csv')" class="px-3.5 py-1.5 rounded bg-white/5 hover:bg-cyanaccent/20 hover:text-cyanaccent border border-transparent hover:border-cyanaccent/30 text-xs transition-all font-semibold">
+                    Download
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Dataset Row 3 -->
+              <tr>
+                <td class="px-6 py-4 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded bg-cyanaccent/15 flex items-center justify-center text-cyanaccent font-bold text-xs">CSV</div>
+                  <div>
+                    <span class="font-semibold text-white block">User Retention.csv</span>
+                    <span class="text-[10px] text-gray-500">Schema: retention</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-xs text-gray-400">CSV Text</td>
+                <td class="px-6 py-4 text-xs text-gray-400">0.6 KB</td>
+                <td class="px-6 py-4 text-xs text-gray-400">5 Rows</td>
+                <td class="px-6 py-4 text-xs text-gray-400">User Cohorts & Activity Logs</td>
+                <td class="px-6 py-4 text-right">
+                  <button onclick="triggerDatasetDownload('User Retention.csv')" class="px-3.5 py-1.5 rounded bg-white/5 hover:bg-cyanaccent/20 hover:text-cyanaccent border border-transparent hover:border-cyanaccent/30 text-xs transition-all font-semibold">
+                    Download
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Dataset Row 4 -->
+              <tr>
+                <td class="px-6 py-4 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded bg-cyanaccent/15 flex items-center justify-center text-cyanaccent font-bold text-xs">CSV</div>
+                  <div>
+                    <span class="font-semibold text-white block">Tech Salaries 2026.csv</span>
+                    <span class="text-[10px] text-gray-500">Schema: salaries</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 font-mono text-xs text-gray-400">CSV Text</td>
+                <td class="px-6 py-4 text-xs text-gray-400">0.5 KB</td>
+                <td class="px-6 py-4 text-xs text-gray-400">4 Rows</td>
+                <td class="px-6 py-4 text-xs text-gray-400">BI Developer & Data Analyst Comp</td>
+                <td class="px-6 py-4 text-right">
+                  <button onclick="triggerDatasetDownload('Tech Salaries 2026.csv')" class="px-3.5 py-1.5 rounded bg-white/5 hover:bg-cyanaccent/20 hover:text-cyanaccent border border-transparent hover:border-cyanaccent/30 text-xs transition-all font-semibold">
+                    Download
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT SUBMISSION PORTAL -->
+    <section id="submission" class="space-y-6">
+      <div class="text-center max-w-3xl mx-auto space-y-3">
+        <span class="text-xs text-cyanaccent font-semibold uppercase tracking-wider">Evaluation Hub</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">Project Submission Portal</h2>
+        <p class="text-gray-400 text-sm sm:text-base">
+          Submit your completed GitHub analytical repository or live Tableau dashboard link. Our automation parser will index files and update your Student Dashboard metrics.
+        </p>
+      </div>
+
+      <div class="max-w-2xl mx-auto relative">
+        <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-indigoaccent to-cyanaccent opacity-20 blur-xl"></div>
+        <div class="relative glass-panel rounded-2xl p-6 sm:p-8 border border-white/5">
+          <form id="project-submit-form" class="space-y-5">
+            <!-- Row 1: Student Name & Email -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="submit-student-name" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Student Name</label>
+                <input type="text" id="submit-student-name" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyanaccent" placeholder="Afzal Ehsan">
+              </div>
+              <div>
+                <label for="submit-student-email" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
+                <input type="email" id="submit-student-email" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyanaccent" placeholder="student@datalabs.pro">
+              </div>
+            </div>
+
+            <!-- Row 2: Project Title & Repo Link -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="submit-project-name" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Project Name</label>
+                <input type="text" id="submit-project-name" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyanaccent" placeholder="E-commerce RFM Dashboard">
+              </div>
+              <div>
+                <label for="submit-repo-link" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">GitHub / Tableau URL</label>
+                <input type="url" id="submit-repo-link" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyanaccent" placeholder="https://github.com/afzalehsan/my-repo">
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="submit-desc" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Analytical Methodology (Markdown supported)</label>
+              <textarea id="submit-desc" rows="4" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyanaccent" placeholder="Include datasets used, metric definitions (e.g. LTV, CAC), SQL Joins deployed, or visual dashboard goals..."></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-2">
+              <button type="submit" class="w-full py-3.5 rounded-lg font-semibold text-sm bg-gradient-to-r from-cyanaccent to-indigoaccent hover:opacity-90 shadow-lg shadow-indigoaccent/25 transition-all text-white">
+                Submit Code for Review
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOCK CREDENTIALS FLOATING INFO BANNER -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 relative z-10">
+    <div class="glass-panel border border-cyanaccent/20 bg-cyanaccent/5 rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyanaccent animate-ping"></span>
+        <span class="text-gray-300">Investor Pitch Info: Try logging in using <strong>student@datalabs.pro</strong> (Password: any) to unlock the Student dashboard.</span>
+      </div>
+      <a href="#about" class="text-cyanaccent hover:underline font-semibold">Learn More &uarr;</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-800 bg-gray-950/60 relative z-10 mt-20 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-gray-500">
+      <div>
+        <p class="font-display font-semibold text-gray-400">DataLabs Pro | Responsive Portfolio Pitch</p>
+      </div>
+      <div class="text-center md:text-right">
+        <p class="text-gray-400">
+          Design and Idea by: <strong class="text-cyanaccent hover:text-white transition-colors duration-200">Afzal Ehsan</strong> | All Rights Reserved
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AUTHENTICATION DIALOG (STUDENT LOGIN MODAL) -->
+  <div id="login-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-950/80 backdrop-blur-md animate-fade-in">
+    <div class="glass-panel w-full max-w-md mx-4 rounded-2xl p-6 sm:p-8 border border-white/10 relative">
+      <button id="close-login-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+
+      <div class="space-y-4 text-center">
+        <div class="w-12 h-12 rounded-full bg-cyanaccent/20 mx-auto flex items-center justify-center border border-cyanaccent/50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-cyanaccent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+        </div>
+        <div>
+          <h3 class="font-display font-bold text-2xl text-white">Student Portal</h3>
+          <p class="text-xs text-gray-400 mt-1">Unlock your analytical progress logs and submission status.</p>
+        </div>
+      </div>
+
+      <form class="space-y-4 mt-6">
+        <div>
+          <label for="login-email" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Institutional Email</label>
+          <input type="email" id="login-email" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyanaccent" placeholder="student@datalabs.pro">
+        </div>
+        <div>
+          <label for="login-pass" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Password</label>
+          <input type="password" id="login-pass" required class="w-full bg-gray-950 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyanaccent" placeholder="••••••••">
+        </div>
+        <div class="pt-2">
+          <button id="submit-login-btn" type="submit" class="w-full py-3 rounded-lg font-semibold text-sm bg-gradient-to-r from-cyanaccent to-indigoaccent hover:opacity-90 transition-all text-white">
+            Access Dashboard
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-4 text-center text-xs text-gray-500">
+        Default Mock Email: <strong class="text-gray-400 select-all">student@datalabs.pro</strong> (Password: any)
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT SUBMISSION SUCCESS MODAL -->
+  <div id="submission-success-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-950/80 backdrop-blur-md animate-fade-in">
+    <!-- Confetti Particle Canvas Element -->
+    <div id="confetti-holder" class="absolute inset-0 pointer-events-none z-0"></div>
+
+    <div class="relative z-10 glass-panel w-full max-w-md mx-4 rounded-2xl p-6 sm:p-8 border border-emeraldaccent/30 bg-gray-900/90 text-center space-y-5">
+      <div class="w-16 h-16 rounded-full bg-emeraldaccent/20 mx-auto flex items-center justify-center border border-emeraldaccent/50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emeraldaccent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <div class="space-y-2">
+        <span class="text-xs text-emeraldaccent font-bold uppercase tracking-widest">SUBMISSION ACCEPTED</span>
+        <h3 class="font-display font-bold text-2xl text-white">Project Submitted Successfully!</h3>
+        <p class="text-sm text-gray-400 leading-relaxed">
+          Your code repository index has been registered in the validation queue. The platform has triggered progress tracking calculations.
+        </p>
+      </div>
+
+      <div class="bg-white/5 py-2.5 px-4 rounded-lg text-xs text-gray-400 font-mono text-left space-y-1">
+        <div><strong>Status:</strong> Processing (1-2 mins)</div>
+        <div><strong>Action:</strong> Automated Static Code Analysis</div>
+      </div>
+
+      <div class="pt-2">
+        <button id="close-submission-success-btn" class="w-full py-3 rounded-lg font-semibold text-sm bg-gradient-to-r from-emerald-500 to-cyan-500 hover:opacity-90 transition-all text-white shadow-lg shadow-emerald-500/20">
+          Return to Hub
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
