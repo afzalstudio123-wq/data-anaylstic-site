@@ -1,4 +1,19 @@
-// Mock Datasets for SQL Playground
+// Default Mock Datasets
+const defaultDatasets = [
+  { id: 'dataset-1', name: 'E-commerce Sales.csv', schema: 'sales', format: 'CSV Text', size: '1.4 KB', rows: '7 Rows', useCase: 'Sales Trends & Product Margins', data: 'sales' },
+  { id: 'dataset-2', name: 'Zomato Analysis.csv', schema: 'restaurants', format: 'CSV Text', size: '0.8 KB', rows: '5 Rows', useCase: 'Food Rating & Delivery Times', data: 'restaurants' },
+  { id: 'dataset-3', name: 'User Retention.csv', schema: 'retention', format: 'CSV Text', size: '0.6 KB', rows: '5 Rows', useCase: 'User Cohorts & Activity Logs', data: 'retention' },
+  { id: 'dataset-4', name: 'Tech Salaries 2026.csv', schema: 'salaries', format: 'CSV Text', size: '0.5 KB', rows: '4 Rows', useCase: 'BI Developer & Data Analyst Comp', data: 'salaries' }
+];
+
+// Default Mock Submissions
+const defaultSubmissions = [
+  { id: 'sub-1', name: 'Amit Sharma', project: 'Zomato Rating Analysis', repo: 'https://github.com/amit/zomato-analysis', desc: 'Analyzed food ratings vs delivery delays.', date: '2026-06-24 10:15', status: 'Approved' },
+  { id: 'sub-2', name: 'Zoe Martinez', project: 'E-commerce Cohort Retention', repo: 'https://github.com/zoe/ecom-retention', desc: 'Cohort retention analysis using Python.', date: '2026-06-24 11:30', status: 'Under Review' },
+  { id: 'sub-3', name: 'Afzal Ehsan', project: 'DataLabs Pro Landing Page', repo: 'https://github.com/afzalehsan/datalabs-pro', desc: 'Interactive learning sandbox portal UI.', date: '2026-06-24 12:00', status: 'Approved' }
+];
+
+// Mock SQL Relational Database Schemas
 const mockDB = {
   sales: [
     { sale_id: 101, product: 'MacBook Air', category: 'Electronics', revenue: 999, units_sold: 1, order_date: '2026-06-01' },
@@ -25,11 +40,42 @@ const mockDB = {
   ]
 };
 
-// Global variables for Chart references
+// Simulated activities for automated toasts
+const mockActivities = [
+  "Suresh just solved LeetCode Top 50 SQL Challenge #14!",
+  "Fatima just downloaded Zomato Analysis dataset.",
+  "Liam just submitted E-commerce RFM Dashboard.",
+  "Afzal Ehsan updated SQL Sandbox schema.",
+  "Priya just completed Accenture Data Virtual Internship Module 1.",
+  "Raj just downloaded User Retention.csv.",
+  "Chen just registered a new project submission: BI Salaries Analytics."
+];
+
+// Mock AI Audit Responses
+const mockAIFeedback = [
+  {
+    cleaning: 94, visual: 88, sql: 91,
+    comment: "Excellent indexing patterns detected. The queries utilize index-seek mechanisms. Data cleaning scripts handle null inputs correctly. Recommendation: Add a primary key constraint to the customer table to speed up joins."
+  },
+  {
+    cleaning: 88, visual: 94, sql: 85,
+    comment: "Outstanding visualization structure with interactive cross-filters. The SQL queries use nested sub-queries which could be optimized using Common Table Expressions (CTEs) for better readability and 12% faster execution."
+  },
+  {
+    cleaning: 95, visual: 85, sql: 96,
+    comment: "Perfect query execution plans with minimal table scans. Robust data transformation schemas. Recommendation: Expand visualization dimensions to include dynamic categorical binning."
+  }
+];
+
+// Global Chart References
 let dashboardChart = null;
+let adminChart = null;
 
 // DOMContentLoaded Initialization
 document.addEventListener('DOMContentLoaded', () => {
+  // Setup data local storage fallback
+  initLocalStorage();
+
   // Initialize Toast Container
   initToastContainer();
 
@@ -45,14 +91,110 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bind Submission Portal
   initSubmissionPortal();
 
-  // Bind Mock Auth Modals
-  initAuthSystem();
+  // Bind Mock Auth Modals & Gamified Profile
+  initAuthAndProfile();
 
-  // Bind Mobile Navigation Menu
-  initMobileMenu();
+  // Bind Admin Dashboard Switcher
+  initAdminDashboard();
+
+  // Start Live Activity Notifications Loop
+  initActivityToasts();
+
+  // Bind AI Code Auditor Sandbox
+  initAIAuditor();
+
+  // Bind Capstone Locked Modals
+  initPremiumModal();
+
+  // Bind Admin Project Preview Modal
+  initProjectPreviewModal();
+
+  // Render lists & grids
+  renderSubmissions();
+  renderDatasets();
 });
 
-/* MOBILE MENU NAVIGATION TOGGLE */
+/* LOCAL STORAGE INITIALIZER */
+function initLocalStorage() {
+  if (!localStorage.getItem('datasets')) {
+    localStorage.setItem('datasets', JSON.stringify(defaultDatasets));
+  }
+  if (!localStorage.getItem('submissions')) {
+    localStorage.setItem('submissions', JSON.stringify(defaultSubmissions));
+  }
+}
+
+/* TOAST SYSTEM */
+function initToastContainer() {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'fixed bottom-24 right-5 z-50 flex flex-col gap-3 pointer-events-none';
+    document.body.appendChild(container);
+  }
+}
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `glass-panel toast-animate flex items-center gap-3 px-4 py-3 rounded-lg shadow-xl border pointer-events-auto min-w-[280px] max-w-sm`;
+  
+  let iconColor = 'text-cyanaccent';
+  let borderStyle = 'border-cyanaccent/30';
+  let svgIcon = `
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>`;
+
+  if (type === 'success') {
+    iconColor = 'text-emeraldaccent';
+    borderStyle = 'border-emeraldaccent/30';
+    svgIcon = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>`;
+  } else if (type === 'error') {
+    iconColor = 'text-red-400';
+    borderStyle = 'border-red-500/30';
+    svgIcon = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>`;
+  }
+
+  toast.innerHTML = `
+    <div class="${iconColor}">${svgIcon}</div>
+    <div class="flex-1 text-xs sm:text-sm text-gray-200 font-medium">${message}</div>
+    <button class="text-gray-400 hover:text-white transition-colors" onclick="this.parentElement.remove()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+  `;
+  toast.classList.add(borderStyle);
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3500);
+}
+
+/* LOOPING ACTIVITY TOASTS */
+function initActivityToasts() {
+  setInterval(() => {
+    const isAdmin = document.getElementById('admin-mode-toggle').checked;
+    if (!isAdmin) {
+      const idx = Math.floor(Math.random() * mockActivities.length);
+      showToast(mockActivities[idx], 'info');
+    }
+  }, 15000);
+}
+
+/* BOTTOM NOTCH DOCK NAVIGATION */
 function initMobileMenu() {
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
@@ -66,18 +208,17 @@ function initMobileMenu() {
         mobileMenu.classList.remove('hidden');
         mobileMenu.classList.add('block');
         if (iconPath) {
-          iconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12'); // Close "X" shape
+          iconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12');
         }
       } else {
         mobileMenu.classList.add('hidden');
         mobileMenu.classList.remove('block');
         if (iconPath) {
-          iconPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16'); // Hamburger shape
+          iconPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
         }
       }
     });
 
-    // Close menu when navigation links are clicked
     mobileLinks.forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
@@ -90,63 +231,6 @@ function initMobileMenu() {
   }
 }
 
-/* TOAST SYSTEM */
-function initToastContainer() {
-  const container = document.createElement('div');
-  container.id = 'toast-container';
-  container.className = 'fixed bottom-5 right-5 z-50 flex flex-col gap-3 pointer-events-none';
-  document.body.appendChild(container);
-}
-
-function showToast(message, type = 'success') {
-  const container = document.getElementById('toast-container');
-  if (!container) return;
-
-  const toast = document.createElement('div');
-  toast.className = `glass-panel toast-animate flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border pointer-events-auto min-w-[280px]`;
-  
-  let iconColor = 'text-cyan-400';
-  let borderBorder = 'border-cyan-500/30';
-  let svgIcon = `
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>`;
-
-  if (type === 'success') {
-    iconColor = 'text-emerald-400';
-    borderBorder = 'border-emerald-500/30';
-    svgIcon = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>`;
-  } else if (type === 'error') {
-    iconColor = 'text-red-400';
-    borderBorder = 'border-red-500/30';
-    svgIcon = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-      </svg>`;
-  }
-
-  toast.innerHTML = `
-    <div class="${iconColor}">${svgIcon}</div>
-    <div class="flex-1 text-sm text-gray-200 font-medium">${message}</div>
-    <button class="text-gray-400 hover:text-white transition-colors" onclick="this.parentElement.remove()">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-      </svg>
-    </button>
-  `;
-  toast.classList.add(borderBorder);
-
-  container.appendChild(toast);
-
-  // Auto remove after 3.5s (matching toast-animate animation duration)
-  setTimeout(() => {
-    toast.remove();
-  }, 3500);
-}
-
 /* RESOURCE HUB FILTERING */
 function initResourceFilter() {
   const filterButtons = document.querySelectorAll('.filter-tab-btn');
@@ -154,18 +238,16 @@ function initResourceFilter() {
 
   filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Toggle button styles
       filterButtons.forEach(b => {
-        b.classList.remove('bg-gradient-to-r', 'from-cyan-500', 'to-indigo-500', 'text-white', 'shadow-lg', 'shadow-indigo-500/20');
+        b.classList.remove('bg-gradient-to-r', 'from-cyanaccent', 'to-indigoaccent', 'text-white', 'shadow-lg', 'shadow-indigoaccent/20');
         b.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
       });
 
       btn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-white/5');
-      btn.classList.add('bg-gradient-to-r', 'from-cyan-500', 'to-indigo-500', 'text-white', 'shadow-lg', 'shadow-indigo-500/20');
+      btn.classList.add('bg-gradient-to-r', 'from-cyanaccent', 'to-indigoaccent', 'text-white', 'shadow-lg', 'shadow-indigoaccent/20');
 
       const filterValue = btn.getAttribute('data-filter');
 
-      // Filter logic with smooth animations
       projectCards.forEach(card => {
         card.classList.remove('animate-fade-in');
         card.style.opacity = '0';
@@ -194,7 +276,6 @@ function initSQLPlayground() {
 
   if (!runBtn || !textarea || !outputArea) return;
 
-  // Handler for preset query selection
   querySelect.addEventListener('change', (e) => {
     const selectedValue = e.target.value;
     if (selectedValue === 'preset1') {
@@ -208,7 +289,6 @@ function initSQLPlayground() {
     }
   });
 
-  // Handler for query execution
   runBtn.addEventListener('click', () => {
     const rawQuery = textarea.value.trim();
     if (!rawQuery) {
@@ -216,11 +296,10 @@ function initSQLPlayground() {
       return;
     }
 
-    // Add pulse glowing effect to code block border
     terminalBorder.classList.add('code-active-border');
     outputArea.innerHTML = `
       <div class="flex items-center justify-center py-10 gap-2">
-        <svg class="animate-spin h-5 w-5 text-cyan-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin h-5 w-5 text-cyanaccent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
@@ -252,17 +331,14 @@ function initSQLPlayground() {
   });
 }
 
-// Regex mock SQL compiler
 function executeMockSQL(query) {
   const clean = query.replace(/\s+/g, ' ').replace(/;$/, '').trim();
   const lower = clean.toLowerCase();
 
-  // Validate SELECT statement
   if (!lower.startsWith('select')) {
     throw new Error('DataLabs Sandbox only supports SELECT queries. Other DML/DDL commands (INSERT, UPDATE, DELETE) are disabled.');
   }
 
-  // Parse Table Source
   let tableName = '';
   if (lower.includes('from sales')) tableName = 'sales';
   else if (lower.includes('from customers')) tableName = 'customers';
@@ -274,7 +350,6 @@ function executeMockSQL(query) {
   const database = mockDB[tableName];
   let results = [...database];
 
-  // Parse WHERE clause filters
   if (lower.includes('where')) {
     const whereClause = clean.substring(lower.indexOf('where') + 6);
     const orderIndex = whereClause.toLowerCase().indexOf('order by');
@@ -283,18 +358,15 @@ function executeMockSQL(query) {
     results = applyWhereFilter(results, filterExpr);
   }
 
-  // Parse ORDER BY sorting
   if (lower.includes('order by')) {
     const orderClause = clean.substring(lower.indexOf('order by') + 9).trim();
     results = applyOrderBy(results, orderClause);
   }
 
-  // Parse SELECT Columns
   const selectCols = clean.substring(6, lower.indexOf('from')).split(',').map(s => s.trim());
   if (selectCols.length === 1 && selectCols[0] === '*') {
     return { columns: Object.keys(database[0]), data: results };
   } else {
-    // Check if column exists
     const validCols = Object.keys(database[0]);
     selectCols.forEach(col => {
       if (!validCols.includes(col)) {
@@ -311,10 +383,6 @@ function executeMockSQL(query) {
 }
 
 function applyWhereFilter(data, filterString) {
-  // Support basic clauses:
-  // category = 'Electronics'
-  // total_spent > 1000
-  // rating >= 4.6
   const operators = ['>=', '<=', '>', '<', '='];
   let operator = '';
   for (let op of operators) {
@@ -328,7 +396,7 @@ function applyWhereFilter(data, filterString) {
 
   const parts = filterString.split(operator).map(s => s.trim());
   const col = parts[0];
-  let val = parts[1].replace(/['"]/g, ''); // strip quotes
+  let val = parts[1].replace(/['"]/g, '');
 
   return data.filter(row => {
     const rowVal = row[col];
@@ -419,7 +487,7 @@ function renderSQLOutput(result, container) {
         </tbody>
       </table>
     </div>
-    <div class="mt-3 px-4 flex items-center justify-between text-xs text-cyan-400 font-semibold">
+    <div class="mt-3 px-4 flex items-center justify-between text-xs text-cyanaccent font-semibold">
       <span>Rows count: ${result.data.length}</span>
       <span>Engine: Local Sandbox SQLite v3 (WASM Mock)</span>
     </div>
@@ -437,18 +505,17 @@ function initDashboardCharts(type) {
   datasetBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       datasetBtns.forEach(b => {
-        b.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
+        b.classList.remove('bg-cyanaccent/20', 'text-cyanaccent', 'border-cyanaccent/50');
         b.classList.add('bg-white/5', 'text-gray-400', 'border-transparent');
       });
       btn.classList.remove('bg-white/5', 'text-gray-400', 'border-transparent');
-      btn.classList.add('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/50');
+      btn.classList.add('bg-cyanaccent/20', 'text-cyanaccent', 'border-cyanaccent/50');
 
       const dsType = btn.getAttribute('data-dataset');
       updateDashboardData(dsType);
     });
   });
 
-  // Chart configuration sets
   const chartConfigs = {
     ecommerce: {
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
@@ -456,7 +523,7 @@ function initDashboardCharts(type) {
         {
           label: 'E-commerce Revenue ($K)',
           data: [12, 19, 15, 25, 22, 30],
-          borderColor: '#06B6D4', // Cyan
+          borderColor: '#06B6D4',
           backgroundColor: 'rgba(6, 182, 212, 0.1)',
           fill: true,
           tension: 0.4
@@ -464,7 +531,7 @@ function initDashboardCharts(type) {
         {
           label: 'Marketing Spend ($K)',
           data: [5, 6, 8, 12, 10, 14],
-          borderColor: '#6366F1', // Indigo
+          borderColor: '#6366F1',
           backgroundColor: 'rgba(99, 102, 241, 0.05)',
           fill: true,
           tension: 0.4
@@ -478,12 +545,12 @@ function initDashboardCharts(type) {
           label: 'Orders Count (Hundreds)',
           data: [45, 32, 28, 50, 18, 22],
           backgroundColor: [
-            'rgba(239, 68, 68, 0.7)',  // Red
-            'rgba(245, 158, 11, 0.7)', // Amber
-            'rgba(16, 185, 129, 0.7)', // Emerald
-            'rgba(6, 182, 212, 0.7)',  // Cyan
-            'rgba(99, 102, 241, 0.7)', // Indigo
-            'rgba(168, 85, 247, 0.7)'  // Purple
+            'rgba(239, 68, 68, 0.7)',
+            'rgba(245, 158, 11, 0.7)',
+            'rgba(16, 185, 129, 0.7)',
+            'rgba(6, 182, 212, 0.7)',
+            'rgba(99, 102, 241, 0.7)',
+            'rgba(168, 85, 247, 0.7)'
           ],
           borderColor: 'rgba(255, 255, 255, 0.1)',
           borderWidth: 1
@@ -492,7 +559,6 @@ function initDashboardCharts(type) {
     }
   };
 
-  // Create Chart
   if (dashboardChart) {
     dashboardChart.destroy();
   }
@@ -500,7 +566,7 @@ function initDashboardCharts(type) {
   const isBar = type === 'zomato';
   dashboardChart = new Chart(ctx, {
     type: isBar ? 'bar' : 'line',
-    data: chartConfigs[type],
+    data: chartConfigs[type] || chartConfigs['ecommerce'],
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -525,7 +591,6 @@ function initDashboardCharts(type) {
     }
   });
 
-  // Display metrics summaries
   updateSummaryMetrics(type);
 }
 
@@ -548,15 +613,15 @@ function updateSummaryMetrics(type) {
   if (type === 'ecommerce') {
     metric1.innerText = 'Total Revenue';
     val1.innerText = '$123,000';
-    trend1.innerHTML = `<span class="text-emerald-400">↑ 18.2%</span> vs last month`;
+    trend1.innerHTML = `<span class="text-emeraldaccent">↑ 18.2%</span> vs last month`;
 
     metric2.innerText = 'Avg. Order Value';
     val2.innerText = '$84.50';
-    trend2.innerHTML = `<span class="text-emerald-400">↑ 4.3%</span> vs last month`;
+    trend2.innerHTML = `<span class="text-emeraldaccent">↑ 4.3%</span> vs last month`;
   } else {
     metric1.innerText = 'Total Orders';
     val1.innerText = '19,500';
-    trend1.innerHTML = `<span class="text-emerald-400">↑ 12.8%</span> vs weekend avg`;
+    trend1.innerHTML = `<span class="text-emeraldaccent">↑ 12.8%</span> vs weekend avg`;
 
     metric2.innerText = 'Avg. Prep Time';
     val2.innerText = '24.2 mins';
@@ -564,21 +629,20 @@ function updateSummaryMetrics(type) {
   }
 }
 
-/* DATASET REPOSITORY MOCK DOWNLOADS */
+/* DATASET REPOSITORY DOWNLOADS */
 function triggerDatasetDownload(fileName) {
   let fileContent = '';
   
   if (fileName.includes('E-commerce')) {
-    fileContent = `SaleID,Product,Category,Revenue,UnitsSold,Date,Country\n101,MacBook Air,Electronics,999,1,2026-06-01,USA\n102,iPhone 15 Pro,Electronics,1998,2,2026-06-02,UK\n103,Ergonomic Chair,Office Supplies,249,1,2026-06-03,Canada\n104,Wireless Mouse,Electronics,150,3,2026-06-04,Germany\n105,Standing Desk,Office Supplies,450,1,2026-06-05,USA\n106,Coffee Maker,Home Appliances,120,1,2026-06-06,France\n107,Smart Watch,Electronics,299,1,2026-06-07,India`;
+    fileContent = `SaleID,Product,Category,Revenue,UnitsSold,Date,Country\n101,MacBook Air,Electronics,999,1,2026-06-01,USA\n102,iPhone 15 Pro,Electronics,1998,2,2026-06-02,UK\n103,Ergonomic Chair,Office Supplies,249,1,2026-06-03,Canada`;
   } else if (fileName.includes('Zomato')) {
-    fileContent = `RestaurantID,Name,Cuisine,Rating,CostForTwo,DeliveryTimeMins,City\n1,Pizza Palace,Italian,4.6,40,25,New Delhi\n2,Spicy Tadka,Indian,4.8,30,35,Mumbai\n3,Sushi Zen,Japanese,4.7,60,20,Bangalore\n4,Burger Bistro,American,4.2,25,15,Kolkata\n5,Taco Express,Mexican,4.4,20,30,Chennai`;
+    fileContent = `RestaurantID,Name,Cuisine,Rating,CostForTwo,DeliveryTimeMins,City\n1,Pizza Palace,Italian,4.6,40,25,New Delhi\n2,Spicy Tadka,Indian,4.8,30,35,Mumbai`;
   } else if (fileName.includes('User')) {
-    fileContent = `UserID,CohortMonth,MonthsActive,TotalLogs,ReturnedInMonth6\n1001,2026-01,5,45,True\n1002,2026-01,2,12,False\n1003,2026-02,4,30,True\n1004,2026-03,3,22,True\n1005,2026-04,1,5,False`;
+    fileContent = `UserID,CohortMonth,MonthsActive,TotalLogs,ReturnedInMonth6\n1001,2026-01,5,45,True\n1002,2026-01,2,12,False`;
   } else {
-    fileContent = `Rank,Title,ExperienceLevel,SalaryUSD,CompanySize\n1,Data Scientist,Senior,165000,Large\n2,Data Analyst,Mid,95000,Medium\n3,Analytics Engineer,Senior,142000,Small\n4,BI Developer,Junior,70000,Medium`;
+    fileContent = `Rank,Title,ExperienceLevel,SalaryUSD,CompanySize\n1,Data Scientist,Senior,165000,Large\n2,Data Analyst,Mid,95000,Medium`;
   }
 
-  // Create real download link using Blob
   const blob = new Blob([fileContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -592,7 +656,136 @@ function triggerDatasetDownload(fileName) {
   showToast(`Initiating download: ${fileName}`, 'success');
 }
 
-/* PROJECT SUBMISSION PORTAL */
+/* DYNAMIC DATA RENDERING (FROM LOCAL STORAGE) */
+function renderSubmissions() {
+  const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+  
+  const studentTableBody = document.getElementById('student-submissions-tbody');
+  if (studentTableBody) {
+    if (submissions.length === 0) {
+      studentTableBody.innerHTML = `<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No submissions found. Submit your project below!</td></tr>`;
+    } else {
+      studentTableBody.innerHTML = submissions.map(sub => {
+        let badgeClass = 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20';
+        if (sub.status === 'Approved') badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        else if (sub.status === 'Rejected') badgeClass = 'bg-red-500/10 text-red-400 border-red-500/20';
+
+        return `
+          <tr>
+            <td class="px-6 py-4">
+              <span class="font-semibold text-white block text-sm">${sub.name}</span>
+              <span class="text-[10px] text-gray-500">${sub.date}</span>
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-300">${sub.project}</td>
+            <td class="px-6 py-4 text-sm">
+              <a href="${sub.repo}" target="_blank" class="text-cyanaccent hover:underline flex items-center gap-1">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                GitHub Link
+              </a>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <span class="px-2.5 py-1 rounded text-xs font-bold border ${badgeClass}">${sub.status}</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  const adminTableBody = document.getElementById('admin-submissions-tbody');
+  if (adminTableBody) {
+    if (submissions.length === 0) {
+      adminTableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No submissions to manage.</td></tr>`;
+    } else {
+      adminTableBody.innerHTML = submissions.map(sub => {
+        let badgeClass = 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20';
+        if (sub.status === 'Approved') badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        else if (sub.status === 'Rejected') badgeClass = 'bg-red-500/10 text-red-400 border-red-500/20';
+
+        return `
+          <tr>
+            <td class="px-6 py-4 text-sm font-semibold text-white">${sub.name}</td>
+            <td class="px-6 py-4 text-sm text-gray-300">${sub.project}</td>
+            <td class="px-6 py-4 text-xs text-gray-400 font-mono">${sub.date}</td>
+            <td class="px-6 py-4 text-sm">
+              <span class="px-2 py-0.5 rounded text-xs font-bold border ${badgeClass}" id="admin-badge-${sub.id}">${sub.status}</span>
+            </td>
+            <td class="px-6 py-4 text-right flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 font-display">
+              <button onclick="previewProjectSubmission('${sub.id}')" class="p-1.5 sm:px-2.5 sm:py-1 bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white rounded text-xs font-bold transition-all border border-white/5 flex items-center gap-1" title="Preview Project">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-cyanaccent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span class="hidden md:inline">Preview</span>
+              </button>
+              <button onclick="updateSubmissionStatus('${sub.id}', 'Approved')" class="p-1.5 sm:px-2.5 sm:py-1 bg-emerald-500/20 hover:bg-emerald-500/40 text-emerald-400 rounded text-xs font-bold transition-all border border-emerald-500/20 flex items-center gap-1" title="Approve Project">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="hidden md:inline">Approve</span>
+              </button>
+              <button onclick="updateSubmissionStatus('${sub.id}', 'Rejected')" class="p-1.5 sm:px-2.5 sm:py-1 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded text-xs font-bold transition-all border border-red-500/20 flex items-center gap-1" title="Reject Project">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span class="hidden md:inline">Reject</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  const pendingCount = submissions.filter(s => s.status === 'Under Review').length;
+  const adminPendingCountEl = document.getElementById('admin-pending-approvals');
+  if (adminPendingCountEl) {
+    adminPendingCountEl.innerText = pendingCount;
+  }
+}
+
+window.updateSubmissionStatus = function(subId, newStatus) {
+  const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+  const idx = submissions.findIndex(s => s.id === subId);
+  if (idx !== -1) {
+    submissions[idx].status = newStatus;
+    localStorage.setItem('submissions', JSON.stringify(submissions));
+    renderSubmissions();
+    showToast(`Submission by ${submissions[idx].name} has been ${newStatus}!`, 'success');
+  }
+};
+
+function renderDatasets() {
+  const datasets = JSON.parse(localStorage.getItem('datasets')) || [];
+  const datasetTbody = document.getElementById('datasets-tbody');
+  
+  if (datasetTbody) {
+    datasetTbody.innerHTML = datasets.map(ds => {
+      return `
+        <tr>
+          <td class="px-6 py-4 flex items-center gap-3">
+            <div class="w-8 h-8 rounded bg-cyanaccent/15 flex items-center justify-center text-cyanaccent font-bold text-xs shrink-0">CSV</div>
+            <div>
+              <span class="font-semibold text-white block">${ds.name}</span>
+              <span class="text-[10px] text-gray-500">Schema: ${ds.schema}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 font-mono text-xs text-gray-400">${ds.format}</td>
+          <td class="px-6 py-4 text-xs text-gray-400">${ds.size}</td>
+          <td class="px-6 py-4 text-xs text-gray-400">${ds.rows}</td>
+          <td class="px-6 py-4 text-xs text-gray-400">${ds.useCase}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="triggerDatasetDownload('${ds.name}')" class="px-3.5 py-1.5 rounded bg-white/5 hover:bg-cyanaccent/20 hover:text-cyanaccent border border-transparent hover:border-cyanaccent/30 text-xs transition-all font-semibold">
+              Download
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+}
+
+/* SUBMISSION PORTAL HANDLER */
 function initSubmissionPortal() {
   const form = document.getElementById('project-submit-form');
   const successModal = document.getElementById('submission-success-modal');
@@ -604,8 +797,9 @@ function initSubmissionPortal() {
     e.preventDefault();
 
     const name = document.getElementById('submit-student-name').value.trim();
-    const repo = document.getElementById('submit-repo-link').value.trim();
+    const email = document.getElementById('submit-student-email').value.trim();
     const projName = document.getElementById('submit-project-name').value.trim();
+    const repo = document.getElementById('submit-repo-link').value.trim();
     const desc = document.getElementById('submit-desc').value.trim();
 
     if (!name || !repo || !projName || !desc) {
@@ -613,13 +807,11 @@ function initSubmissionPortal() {
       return;
     }
 
-    // URL format check
     if (!repo.startsWith('http://') && !repo.startsWith('https://')) {
       showToast('Repository link must start with http:// or https://', 'error');
       return;
     }
 
-    // Visual button loading spinner state
     const btn = form.querySelector('button[type="submit"]');
     const originalText = btn.innerHTML;
     btn.disabled = true;
@@ -631,21 +823,27 @@ function initSubmissionPortal() {
     `;
 
     setTimeout(() => {
-      // Re-enable submit button
       btn.disabled = false;
       btn.innerHTML = originalText;
 
-      // Show beautiful popup modal
+      const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+      const newSub = {
+        id: 'sub-' + Date.now(),
+        name: name,
+        project: projName,
+        repo: repo,
+        desc: desc,
+        date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        status: 'Under Review'
+      };
+      submissions.unshift(newSub);
+      localStorage.setItem('submissions', JSON.stringify(submissions));
+
+      renderSubmissions();
+
       successModal.classList.remove('hidden');
       successModal.classList.add('flex');
       
-      // Update interactive statistics if user is logged in
-      const submissionCount = document.getElementById('student-sub-count');
-      if (submissionCount) {
-        let count = parseInt(submissionCount.innerText);
-        submissionCount.innerText = count + 1;
-      }
-
       form.reset();
       showToast('Project repository successfully submitted for review!', 'success');
       triggerConfettiEffect();
@@ -660,7 +858,6 @@ function initSubmissionPortal() {
   }
 }
 
-// Spark colorful dots inside success dialog
 function triggerConfettiEffect() {
   const container = document.getElementById('confetti-holder');
   if (!container) return;
@@ -673,8 +870,8 @@ function triggerConfettiEffect() {
     const p = document.createElement('div');
     const color = colors[Math.floor(Math.random() * colors.length)];
     const size = Math.floor(Math.random() * 8) + 6;
-    const startX = 50; // percent
-    const startY = 60; // percent
+    const startX = 50;
+    const startY = 60;
 
     p.style.position = 'absolute';
     p.style.width = `${size}px`;
@@ -686,11 +883,10 @@ function triggerConfettiEffect() {
     p.style.transform = 'translate(-50%, -50%)';
     p.style.pointerEvents = 'none';
 
-    // Calculate motion paths
     const angle = Math.random() * Math.PI * 2;
     const velocity = Math.random() * 120 + 60;
     const moveX = Math.cos(angle) * velocity;
-    const moveY = Math.sin(angle) * velocity - 30; // arc upwards
+    const moveY = Math.sin(angle) * velocity - 30;
 
     p.animate([
       { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
@@ -705,111 +901,458 @@ function triggerConfettiEffect() {
   }
 }
 
-/* STUDENT LOGIN & AUTHENTICATION MOCK STATE */
-function initAuthSystem() {
-  const loginModal = document.getElementById('login-modal');
-  const loginBtn = document.getElementById('student-login-btn');
-  const closeLoginBtn = document.getElementById('close-login-btn');
-  const submitLoginBtn = document.getElementById('submit-login-btn');
+/* GAMIFIED STUDENT PROFILE AND AUTH */
+function initAuthAndProfile() {
+  const avatarWidget = document.getElementById('avatar-widget');
+  const avatarDropdown = document.getElementById('avatar-dropdown');
 
-  // Interactive header updates
-  const headerActions = document.getElementById('header-actions');
-  const studentDashboard = document.getElementById('student-dashboard-panel');
+  if (avatarWidget && avatarDropdown) {
+    avatarWidget.addEventListener('click', (e) => {
+      e.stopPropagation();
+      avatarDropdown.classList.toggle('hidden');
+    });
 
-  if (!loginModal || !loginBtn) return;
+    document.addEventListener('click', () => {
+      avatarDropdown.classList.add('hidden');
+    });
 
-  // Toggle modal display
-  loginBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginModal.classList.remove('hidden');
-    loginModal.classList.add('flex');
-  });
-
-  if (closeLoginBtn) {
-    closeLoginBtn.addEventListener('click', () => {
-      loginModal.classList.remove('flex');
-      loginModal.classList.add('hidden');
+    avatarDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
   }
 
-  // Handle Form Login submit
-  if (submitLoginBtn) {
-    submitLoginBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value.trim();
-      const pass = document.getElementById('login-pass').value.trim();
+  initMobileMenu();
+}
 
-      if (!email || !pass) {
-        showToast('Please enter both email and password.', 'error');
-        return;
+/* INTERACTIVE AI PROJECT AUDITOR */
+function initAIAuditor() {
+  const auditBtn = document.getElementById('ai-audit-btn');
+  const repoInput = document.getElementById('ai-repo-input');
+  const resultArea = document.getElementById('ai-audit-results');
+
+  if (!auditBtn || !repoInput || !resultArea) return;
+
+  auditBtn.addEventListener('click', () => {
+    const url = repoInput.value.trim();
+    if (!url) {
+      showToast('Please paste a GitHub repository link to audit!', 'error');
+      return;
+    }
+    if (!url.startsWith('https://github.com')) {
+      showToast('Please enter a valid GitHub URL (starts with https://github.com)', 'error');
+      return;
+    }
+
+    // AI audit typing loading states
+    auditBtn.disabled = true;
+    let seconds = 0;
+    
+    const loadingStatements = [
+      "AI Analyzing GitHub Repository Structure...",
+      "Checking SQL query index layouts and JOIN variables...",
+      "Evaluating data cleaning scripts & visual integrity..."
+    ];
+
+    resultArea.innerHTML = `
+      <div class="glass-panel rounded-xl p-5 border border-cyanaccent/20 bg-cyanaccent/5 flex flex-col items-center justify-center text-center space-y-3 min-h-[160px]">
+        <svg class="animate-spin h-7 w-7 text-cyanaccent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span class="text-xs sm:text-sm text-cyanaccent font-mono" id="ai-loading-text">${loadingStatements[0]}</span>
+      </div>
+    `;
+
+    const textInterval = setInterval(() => {
+      seconds++;
+      const textEl = document.getElementById('ai-loading-text');
+      if (textEl && loadingStatements[seconds]) {
+        textEl.innerText = loadingStatements[seconds];
       }
+    }, 1000);
 
-      // Simulated validation
-      if (email === 'student@datalabs.pro' || email.includes('@')) {
-        // Close Login dialog
-        loginModal.classList.remove('flex');
-        loginModal.classList.add('hidden');
+    setTimeout(() => {
+      clearInterval(textInterval);
+      auditBtn.disabled = false;
 
-        // Transition layout state to logged-in
-        const truncatedEmail = email.split('@')[0];
-        const studentName = truncatedEmail.charAt(0).toUpperCase() + truncatedEmail.slice(1);
+      // Select dynamic evaluation feedback card
+      const idx = Math.floor(Math.random() * mockAIFeedback.length);
+      const evalData = mockAIFeedback[idx];
 
-        headerActions.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="hidden md:inline-block text-sm text-gray-300">Welcome, <strong class="text-cyan-400 font-display">${studentName}</strong></span>
-            <div class="relative group">
-              <img src="https://ui-avatars.com/api/?name=${studentName}&background=06B6D4&color=fff&bold=true" alt="Avatar" class="w-8 h-8 rounded-full border border-cyan-500/50 shadow-lg cursor-pointer">
-              <div class="absolute right-0 mt-2 w-48 rounded-md shadow-lg glass-panel py-1 hidden group-hover:block z-50">
-                <a href="#student-dashboard-panel" class="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-white/5">My Dashboard</a>
-                <a href="#" id="logout-trigger" class="block px-4 py-2 text-sm text-red-400 hover:bg-white/5">Log Out</a>
-              </div>
+      resultArea.innerHTML = `
+        <div class="glass-panel rounded-xl p-5 border border-cyanaccent/30 bg-cyanaccent/5 space-y-4 animate-fade-in relative overflow-hidden group">
+          <div class="absolute -right-10 -top-10 w-28 h-28 bg-cyanaccent/5 rounded-full blur-xl"></div>
+          
+          <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+            <h4 class="font-display font-bold text-sm text-white flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-cyanaccent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              AI Audit Evaluation Report
+            </h4>
+            <span class="text-[10px] text-gray-500 font-mono">Audited: Just now</span>
+          </div>
+
+          <!-- Evaluation Scores Grid -->
+          <div class="grid grid-cols-3 gap-3">
+            <div class="bg-gray-950/40 p-3 rounded-lg border border-white/5 text-center">
+              <span class="text-[10px] text-gray-400 block font-semibold">Data Cleaning</span>
+              <span class="text-xl sm:text-2xl font-display font-black text-cyanaccent">${evalData.cleaning}%</span>
+            </div>
+            <div class="bg-gray-950/40 p-3 rounded-lg border border-white/5 text-center">
+              <span class="text-[10px] text-gray-400 block font-semibold">Visualization</span>
+              <span class="text-xl sm:text-2xl font-display font-black text-indigoaccent">${evalData.visual}%</span>
+            </div>
+            <div class="bg-gray-950/40 p-3 rounded-lg border border-white/5 text-center">
+              <span class="text-[10px] text-gray-400 block font-semibold">SQL Opt</span>
+              <span class="text-xl sm:text-2xl font-display font-black text-emeraldaccent">${evalData.sql}%</span>
             </div>
           </div>
-        `;
 
-        // Render dashboard panel
-        studentDashboard.classList.remove('hidden');
-        studentDashboard.classList.add('animate-slide-up');
-        
-        // Populate Progress bar
-        simulateDashboardStats();
+          <!-- Feedback commentary -->
+          <div class="bg-gray-950/60 p-3 rounded-lg border border-white/5 text-xs text-gray-300 leading-relaxed font-mono">
+            ${evalData.comment}
+          </div>
+        </div>
+      `;
 
-        // Scroll to personal dashboard
-        setTimeout(() => {
-          studentDashboard.scrollIntoView({ behavior: 'smooth' });
-        }, 300);
+      showToast('AI Audit completed successfully!', 'success');
+    }, 3000);
+  });
+}
 
-        showToast(`Welcome back, ${studentName}! Sandbox Workspace Loaded.`, 'success');
+/* PREMIUM LOCKS CAPSTONE INTERACTION */
+function initPremiumModal() {
+  const modal = document.getElementById('premium-coaching-modal');
+  const closeBtn = document.getElementById('close-premium-modal-btn');
+  const lockedCards = document.querySelectorAll('.capstone-locked-card');
 
-        // Bind logout trigger
-        document.getElementById('logout-trigger').addEventListener('click', (e) => {
-          e.preventDefault();
-          location.reload(); // Quick reset state
-        });
-      } else {
-        showToast('Login failed. Use student@datalabs.pro or any standard email format.', 'error');
-      }
+  if (!modal) return;
+
+  lockedCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    });
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
     });
   }
 }
 
-function simulateDashboardStats() {
-  const progressBar = document.getElementById('student-progress-bar');
-  const progressText = document.getElementById('student-progress-text');
-  
-  if (!progressBar || !progressText) return;
+/* ADMIN VIEW & DASHBOARD STATE TOGGLE */
+function initAdminDashboard() {
+  const toggle = document.getElementById('admin-mode-toggle');
+  const studentMain = document.getElementById('student-main-content');
+  const adminMain = document.getElementById('admin-main-content');
+  const dynamicIsland = document.getElementById('dynamic-island-menu');
+  const bottomDock = document.getElementById('bottom-dock-nav');
 
-  // Animate progress bar fill from 0 to 74%
-  let curVal = 0;
-  progressBar.style.width = '0%';
-  
-  const timer = setInterval(() => {
-    curVal += 2;
-    progressBar.style.width = `${curVal}%`;
-    progressText.innerText = `${curVal}%`;
+  if (!toggle || !studentMain || !adminMain) return;
 
-    if (curVal >= 74) {
-      clearInterval(timer);
+  toggle.addEventListener('change', () => {
+    const isChecked = toggle.checked;
+
+    if (isChecked) {
+      studentMain.classList.add('opacity-0');
+      if (dynamicIsland) dynamicIsland.classList.add('pointer-events-none', 'opacity-50');
+      if (bottomDock) bottomDock.classList.add('pointer-events-none', 'opacity-20');
+      
+      setTimeout(() => {
+        studentMain.classList.add('hidden');
+        adminMain.classList.remove('hidden');
+        adminMain.classList.add('animate-slide-up', 'opacity-100');
+        showToast('Admin Mode Enabled - Management Console Online.', 'success');
+        
+        // Initialize Neon Chart inside Admin dashboard
+        renderAdminChart();
+        renderSubmissions();
+      }, 300);
+    } else {
+      adminMain.classList.remove('opacity-100');
+      setTimeout(() => {
+        adminMain.classList.add('hidden');
+        studentMain.classList.remove('hidden');
+        studentMain.classList.add('animate-slide-up', 'opacity-100');
+        if (dynamicIsland) dynamicIsland.classList.remove('pointer-events-none', 'opacity-50');
+        if (bottomDock) bottomDock.classList.remove('pointer-events-none', 'opacity-20');
+        showToast('Logged out of Admin console.', 'info');
+        renderDatasets();
+      }, 300);
     }
-  }, 30);
+  });
+
+  // Bind new Admin Workspace navigation triggers
+  const dropdownBtn = document.getElementById('admin-workspace-btn');
+  const navBtn = document.getElementById('nav-admin-workspace-btn');
+  const mobileBtn = document.getElementById('mobile-admin-workspace-btn');
+  const exitBtn = document.getElementById('admin-exit-workspace-btn');
+
+  function toggleAdmin() {
+    toggle.checked = !toggle.checked;
+    toggle.dispatchEvent(new Event('change'));
+  }
+
+  if (dropdownBtn) dropdownBtn.addEventListener('click', toggleAdmin);
+  if (navBtn) navBtn.addEventListener('click', toggleAdmin);
+  if (mobileBtn) mobileBtn.addEventListener('click', toggleAdmin);
+  if (exitBtn) {
+    exitBtn.addEventListener('click', () => {
+      if (toggle.checked) {
+        toggle.checked = false;
+        toggle.dispatchEvent(new Event('change'));
+      }
+    });
+  }
+
+  // Update status indicator dot in dropdown when toggle state changes
+  toggle.addEventListener('change', () => {
+    const isChecked = toggle.checked;
+    const dot = document.getElementById('admin-workspace-status-dot');
+    if (dot) {
+      if (isChecked) {
+        dot.classList.remove('bg-gray-600');
+        dot.classList.add('bg-emeraldaccent');
+      } else {
+        dot.classList.remove('bg-emeraldaccent');
+        dot.classList.add('bg-gray-600');
+      }
+    }
+  });
+
+  const addDatasetForm = document.getElementById('admin-add-dataset-form');
+  if (addDatasetForm) {
+    addDatasetForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('admin-ds-name').value.trim();
+      const schema = document.getElementById('admin-ds-schema').value.trim();
+      const size = document.getElementById('admin-ds-size').value.trim();
+      const rows = document.getElementById('admin-ds-rows').value.trim();
+      const useCase = document.getElementById('admin-ds-usecase').value.trim();
+
+      if (!name || !schema || !size || !rows || !useCase) {
+        showToast('All fields are required to register a dataset.', 'error');
+        return;
+      }
+
+      const datasets = JSON.parse(localStorage.getItem('datasets')) || [];
+      const newDs = {
+        id: 'dataset-' + Date.now(),
+        name: name,
+        schema: schema,
+        format: 'CSV Text',
+        size: size,
+        rows: rows,
+        useCase: useCase,
+        data: 'custom'
+      };
+
+      datasets.push(newDs);
+      localStorage.setItem('datasets', JSON.stringify(datasets));
+      renderDatasets();
+      addDatasetForm.reset();
+      showToast(`Dataset '${name}' registered successfully!`, 'success');
+    });
+  }
+}
+
+/* RENDER ADMIN PROGRESS NEON GRADIENT LINE CHART */
+function renderAdminChart() {
+  const ctx = document.getElementById('adminAnalyticsChart');
+  if (!ctx) return;
+
+  if (adminChart) {
+    adminChart.destroy();
+  }
+
+  adminChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4', 'Wk 5', 'Wk 6', 'Wk 7'],
+      datasets: [
+        {
+          label: 'Total Submissions',
+          data: [5, 12, 18, 14, 25, 30, 45],
+          borderColor: '#06B6D4', // Neon Cyan
+          backgroundColor: 'rgba(6, 182, 212, 0.1)',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.35
+        },
+        {
+          label: 'Queries Executed (Hundreds)',
+          data: [15, 22, 35, 28, 42, 58, 70],
+          borderColor: '#6366F1', // Neon Indigo
+          backgroundColor: 'rgba(99, 102, 241, 0.05)',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.35
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#9CA3AF',
+            font: { family: 'Outfit', size: 11 }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#9CA3AF', font: { family: 'Inter' } }
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { color: '#9CA3AF', font: { family: 'Inter' } }
+        }
+      }
+    }
+  });
+}
+
+/* PROJECT PREVIEW MODAL LOGIC (ADMIN PANEL) */
+function initProjectPreviewModal() {
+  const modal = document.getElementById('admin-project-preview-modal');
+  const closeBtn = document.getElementById('close-admin-preview-modal-btn');
+  const btnApprove = document.getElementById('preview-btn-approve');
+  const btnReject = document.getElementById('preview-btn-reject');
+  
+  if (!modal) return;
+
+  // Close modal event
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+  }
+
+  // Approve action inside modal
+  if (btnApprove) {
+    btnApprove.addEventListener('click', () => {
+      const subId = document.getElementById('preview-project-id').innerText;
+      updateSubmissionStatus(subId, 'Approved');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+  }
+
+  // Reject action inside modal
+  if (btnReject) {
+    btnReject.addEventListener('click', () => {
+      const subId = document.getElementById('preview-project-id').innerText;
+      updateSubmissionStatus(subId, 'Rejected');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+  }
+}
+
+window.previewProjectSubmission = function(subId) {
+  const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+  const sub = submissions.find(s => s.id === subId);
+  if (!sub) return;
+
+  document.getElementById('preview-student-name').innerText = sub.name;
+  document.getElementById('preview-student-date').innerText = sub.date;
+  document.getElementById('preview-project-title').innerText = sub.project;
+  document.getElementById('preview-project-desc').innerText = sub.desc;
+  document.getElementById('preview-project-id').innerText = sub.id;
+
+  // Generate mock file structure tree
+  const fileTreeContainer = document.getElementById('preview-project-file-tree');
+  if (fileTreeContainer) {
+    fileTreeContainer.innerHTML = getMockFileTree(sub.project);
+  }
+
+  const modal = document.getElementById('admin-project-preview-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+};
+
+function getMockFileTree(projectTitle) {
+  const titleLower = projectTitle.toLowerCase();
+  let files = [];
+  if (titleLower.includes('zomato') || titleLower.includes('food') || titleLower.includes('rating')) {
+    files = [
+      { name: 'data/', type: 'folder', children: ['zomato_raw.csv', 'cleaned_ratings.parquet'] },
+      { name: 'notebooks/', type: 'folder', children: ['exploratory_data_analysis.ipynb', 'zomato_demand_model.ipynb'] },
+      { name: 'scripts/', type: 'folder', children: ['data_pipeline.py', 'sql_queries.sql'] },
+      { name: 'README.md', type: 'file' },
+      { name: 'requirements.txt', type: 'file' }
+    ];
+  } else if (titleLower.includes('retention') || titleLower.includes('cohort') || titleLower.includes('e-commerce') || titleLower.includes('sales')) {
+    files = [
+      { name: 'configs/', type: 'folder', children: ['db_connection.json', 'airflow_dag.py'] },
+      { name: 'queries/', type: 'folder', children: ['rfm_analysis.sql', 'cohort_retention_curves.sql'] },
+      { name: 'src/', type: 'folder', children: ['cleaning_utils.py', 'visualization.py'] },
+      { name: 'dashboard.pbix', type: 'file' },
+      { name: 'README.md', type: 'file' }
+    ];
+  } else {
+    files = [
+      { name: 'data/', type: 'folder', children: ['raw_dataset.csv', 'schema.sql'] },
+      { name: 'notebooks/', type: 'folder', children: ['data_cleaning.ipynb', 'visualization_trends.ipynb'] },
+      { name: 'src/', type: 'folder', children: ['query_optimizer.py', 'app.py'] },
+      { name: 'README.md', type: 'file' },
+      { name: 'requirements.txt', type: 'file' }
+    ];
+  }
+
+  // Render tree as HTML
+  let html = `<div class="font-mono text-[10px] sm:text-xs text-gray-300 space-y-1.5 bg-gray-950/80 p-4 rounded-xl border border-white/5 max-h-[180px] overflow-y-auto">`;
+  
+  files.forEach(f => {
+    if (f.type === 'folder') {
+      html += `
+        <div class="space-y-1">
+          <div class="flex items-center gap-1.5 text-cyanaccent font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+            </svg>
+            <span>${f.name}</span>
+          </div>
+          <div class="pl-4 border-l border-gray-800 ml-1.5 space-y-1.5">
+      `;
+      f.children.forEach(child => {
+        html += `
+          <div class="flex items-center gap-1.5 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+            </svg>
+            <span>${child}</span>
+          </div>
+        `;
+      });
+      html += `
+          </div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div class="flex items-center gap-1.5 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+          </svg>
+          <span>${f.name}</span>
+        </div>
+      `;
+    }
+  });
+
+  html += `</div>`;
+  return html;
 }
